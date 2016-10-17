@@ -4,7 +4,8 @@ export default class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: ''
+      search: '',
+      isDisabled: true
     };
 
     this.onInputChange = this.onInputChange.bind(this);
@@ -14,10 +15,21 @@ export default class Search extends Component {
   submitForm(e) {
     e.preventDefault();
     if(!this.state.search.trim()) return alert('Debe ingresar ubicación');
-    this.props.searchOnSubmit(this.state.search);
+    this.props.searchOnSubmit(this);
+  }
+
+  submitButtonState(e) {
+    if(!e.target.value.trim()) {
+      this.setState({isDisabled: true})
+      console.log(this.state.isDisabled);
+    } else {
+      this.setState({isDisabled: false})
+      console.log(this.state.isDisabled);
+    }
   }
 
   onInputChange(e) {
+    this.submitButtonState(e);
     this.setState({
       search: e.target.value
     });
@@ -39,7 +51,7 @@ export default class Search extends Component {
           />
 
           <span className="input-group-btn">
-            <button className="btn btn-primary" type="submit">
+            <button className="btn btn-primary" type="submit" disabled={this.state.isDisabled}>
               <span className="glyphicon glyphicon-search"></span>
             </button>
           </span>

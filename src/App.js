@@ -41,16 +41,17 @@ export default class App extends Component {
     }
   }
 
-  apiSearch(search) {
-    if (search === '') return;
+  apiSearch(searchObject) {
+    if (searchObject.state.search === '') return;
+    searchObject.setState({isDisabled: true});
 
     const API_KEY = '219457862e614e5aaaf25ec8d98000ee'
     const URL     = 'http://api.breezometer.com/baqi/?'
 
-    axios.get(`${URL}location=${search}&key=${API_KEY}`).then(
+    axios.get(`${URL}location=${searchObject.state.search}&key=${API_KEY}`).then(
       (success) => {
         if (success.data.data_valid) {
-          const object = this.locationObject(search, success.data);
+          const object = this.locationObject(searchObject.state.search, success.data);
           this.appendToStorage('locations', JSON.stringify(object));
           this.setState({
             locations: JSON.parse(localStorage.getItem('locations')).reverse()
@@ -60,7 +61,7 @@ export default class App extends Component {
         }
       },
       (error) => {
-        alert(error);
+        alert(error.data.error.message);
       }
     ).then(() => {
       document.getElementById('input-search').value = ""
@@ -76,7 +77,7 @@ export default class App extends Component {
         </div>
 
         <div className="App-intro">
-          <Search searchOnSubmit={search => this.apiSearch(search)} />
+          <Search searchOnSubmit={searchObject => this.apiSearch(searchObject)} />
           <ListLocations locations={this.state.locations} />
         </div>
       </div>
