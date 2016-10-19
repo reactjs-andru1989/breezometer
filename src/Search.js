@@ -21,10 +21,8 @@ export default class Search extends Component {
   submitButtonState(e) {
     if(!e.target.value.trim()) {
       this.setState({isDisabled: true})
-      console.log(this.state.isDisabled);
     } else {
       this.setState({isDisabled: false})
-      console.log(this.state.isDisabled);
     }
   }
 
